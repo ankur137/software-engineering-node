@@ -2,9 +2,12 @@ import express, {Request, Response} from 'express';
 import UserController from "./controllers/UserController";
 import TuitController from "./controllers/TuitController";
 import mongoose from "mongoose";
-import User from "./models/User";
 import UserDao from "./daos/UserDao";
 import TuitDao from "./daos/TuitDao";
+import LikeController from "./controllers/LikeController";
+import FollowsController from "./controllers/FollowsController";
+import BookmarksController from "./controllers/BookmarksController";
+import MessagesController from "./controllers/MessagesController";
 
 
 const app = express();
@@ -24,6 +27,10 @@ app.get('/add/:a/:b', (req: Request, res: Response) =>
 
 new UserController(app,new UserDao());
 new TuitController(app,new TuitDao());
+LikeController.getInstance(app);
+FollowsController.getInstance(app);
+BookmarksController.getInstance(app);
+MessagesController.getInstance(app);
 
 const PORT = 4000;
 app.listen(process.env.PORT || PORT);
