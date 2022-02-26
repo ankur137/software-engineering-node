@@ -6,7 +6,7 @@ import LikeDao from "../daos/LikeDao";
 import LikeControllerI from "../interfaces/LikeControllerI";
 
 /**
- * @class TuitController Implements RESTful Web service API for likes resource.
+ * @class LikeController Implements RESTful Web service API for likes resource.
  * Defines the following HTTP endpoints:
  * <ul>
  *     <li>GET /users/:uid/likes to retrieve all the tuits liked by a user
@@ -16,7 +16,7 @@ import LikeControllerI from "../interfaces/LikeControllerI";
  *     <li>POST /users/:uid/likes/:tid to record that a user likes a tuit
  *     </li>
  *     <li>DELETE /users/:uid/unlikes/:tid to record that a user
- *     no londer likes a tuit</li>
+ *     no longer likes a tuit</li>
  * </ul>
  * @property {LikeDao} likeDao Singleton DAO implementing likes CRUD operations
  * @property {LikeController} LikeController Singleton controller implementing
@@ -29,7 +29,7 @@ export default class LikeController implements LikeControllerI {
      * Creates singleton controller instance
      * @param {Express} app Express instance to declare the RESTful Web service
      * API
-     * @return TuitController
+     * @return LikeController
      */
     public static getInstance = (app: Express): LikeController => {
         if(LikeController.likeController === null) {
