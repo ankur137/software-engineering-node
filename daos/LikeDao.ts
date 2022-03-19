@@ -33,6 +33,7 @@ export default class LikeDao implements LikeDaoI {
             .find({tuit: tid})
             .populate("likedBy")
             .exec();
+
     /**
      * Uses LikeModel to retrieve all like documents from likes collection
      * @returns Promise To be notified when the likes are retrieved from
