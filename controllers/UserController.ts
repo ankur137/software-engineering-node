@@ -36,6 +36,7 @@ export default class UserController implements UserControllerI {
         this.app.post('/users', this.createUser);
         this.app.delete('/users/:userid', this.deleteUser);
         this.app.put('/users/:userid', this.updateUser);
+        this.app.delete("/users/username/:username/delete", this.deleteUsersByUsername);
     }
     /**
      * Retrieves all users from the database and returns an array of users.
@@ -92,4 +93,8 @@ export default class UserController implements UserControllerI {
     updateUser = (req: Request, res: Response) =>
         this.userDao.updateUser(req.params.userid, req.body)
             .then(status => res.json(status));
+
+    deleteUsersByUsername = (req:Request, res:Response) =>
+        this.userDao.deleteUsersByUsername(req.params.username)
+            .then(status => res.send(status));
 }

@@ -8,9 +8,11 @@ import LikeController from "./controllers/LikeController";
 import FollowsController from "./controllers/FollowsController";
 import BookmarksController from "./controllers/BookmarksController";
 import MessagesController from "./controllers/MessagesController";
+import cors from 'cors';
 
 
 const app = express();
+app.use(cors());
 app.use(express.json())
 
 

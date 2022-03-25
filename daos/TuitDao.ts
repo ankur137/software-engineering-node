@@ -68,4 +68,12 @@ export default class TuitDao implements TuitDaoI {
             {_id: tid},
             {$set: tuit});
     }
+
+    async createTuitByUser(uid: string, tuit: Tuit): Promise<Tuit> {
+        return await TuitModel.create(tuit);
+    }
+
+    async deleteTuitByUser(uid: string): Promise<any> {
+        return await TuitModel.deleteMany({postedBy:uid});
+    }
 }
