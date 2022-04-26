@@ -9,15 +9,20 @@ import FollowsController from "./controllers/FollowsController";
 import BookmarksController from "./controllers/BookmarksController";
 import MessagesController from "./controllers/MessagesController";
 import cors from 'cors';
-
+import AuthenticationController from './controllers/AuthenticationController';
 
 
 const session = require("express-session");
 const app = express();
+
+const SECRET = 'randomSecret';
 let sess = {
-    secret: process.env.SECRET,
+    secret: SECRET,
+    saveUninitialized: true,
+    resave: true,
     cookie: {
         secure: false
+        // secure: false
     }
 }
 
@@ -25,7 +30,11 @@ if (process.env.ENV === 'PRODUCTION') {
     app.set('trust proxy', 1) // trust first proxy
     sess.cookie.secure = true // serve secure cookies
 }
-app.use(cors());
+app.use(session(sess));
+app.use(cors({
+    credentials: true,
+    // origin: process.env.CORS_ORIGIN
+}));
 app.use(express.json())
 
 
@@ -46,6 +55,7 @@ LikeController.getInstance(app);
 FollowsController.getInstance(app);
 BookmarksController.getInstance(app);
 MessagesController.getInstance(app);
+AuthenticationController(app);
 
 const PORT = 4000;
-app.listen(process.env.PORT || PORT);
+app.listen(process.env.PORT || PORT, () => console.log(`Listening on port: ${process.env.PORT || PORT}`));

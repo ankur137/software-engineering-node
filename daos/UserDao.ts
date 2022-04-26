@@ -32,7 +32,7 @@ export default class UserDao implements UserDaoI {
      * database
      */
     async findAllUsers(): Promise<User[]> {
-        return await UserModel.find();
+        return UserModel.find();
     }
 
     /**
@@ -41,7 +41,7 @@ export default class UserDao implements UserDaoI {
      * @returns Promise To be notified when user is retrieved from the database
      */
     async findUserById(uid: string): Promise<User | null> {
-        return await UserModel.findById(uid);
+        return UserModel.findById(uid);
     }
 
     /**
@@ -50,7 +50,7 @@ export default class UserDao implements UserDaoI {
      * @returns Promise To be notified when user is inserted into the database
      */
     async createUser(user: User): Promise<User> {
-        return await UserModel.create(user);
+        return UserModel.create(user);
     }
 
     /**
@@ -59,7 +59,7 @@ export default class UserDao implements UserDaoI {
      * @returns Promise To be notified when user is removed from the database
      */
     async deleteUser(uid: string):  Promise<any> {
-        return await UserModel.deleteOne({_id: uid});
+        return UserModel.deleteOne({_id: uid});
     }
 
     /**
@@ -69,11 +69,11 @@ export default class UserDao implements UserDaoI {
      * @returns Promise To be notified when user is updated in the database
      */
     async updateUser(uid: string, user: User): Promise<any> {
-        return await UserModel.updateOne({_id: uid}, {$set: user});
+        return UserModel.updateOne({_id: uid}, {$set: user});
     }
 
     async deleteUsersByUsername(username: string): Promise<any> {
-        return await UserModel.deleteMany({username: username});
+        return UserModel.deleteMany({username: username});
     }
 
     /**
@@ -82,6 +82,6 @@ export default class UserDao implements UserDaoI {
      * @returns first user having the username provided
      */
     async findUserByUsername(username: string): Promise<any> {
-        return await UserModel.find({username});
+        return UserModel.findOne({username});
     }
 }
