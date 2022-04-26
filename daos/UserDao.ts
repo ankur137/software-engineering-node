@@ -12,6 +12,20 @@ import UserDaoI from "../interfaces/UserDao";
  * @property {UserDao} userDao Private single instance of UserDao
  */
 export default class UserDao implements UserDaoI {
+    private static dao: UserDao | null = null;
+
+    /**
+     * Returns the instance of BookmarksDao. If instance is not present the 
+     * first creates the instance and the returns the same instance
+     * @returns {BookmaUserDaorksDAO} singleton of Bookmarks DAO
+     */
+     public static getInstance = (): UserDao => {
+        if (UserDao.dao === null) {
+            UserDao.dao = new UserDao();
+        }
+        return UserDao.dao;
+    }
+
     /**
      * Uses UserModel to retrieve all user documents from users collection
      * @returns Promise To be notified when the users are retrieved from
@@ -60,5 +74,14 @@ export default class UserDao implements UserDaoI {
 
     async deleteUsersByUsername(username: string): Promise<any> {
         return await UserModel.deleteMany({username: username});
+    }
+
+    /**
+     * Returns the first user object having the username provided as the input.
+     * @param username username of the user
+     * @returns first user having the username provided
+     */
+    async findUserByUsername(username: string): Promise<any> {
+        return await UserModel.find({username});
     }
 }
