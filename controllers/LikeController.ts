@@ -11,13 +11,13 @@ import LikeControllerI from "../interfaces/LikeControllerI";
  * @class TuitController Implements RESTful Web service API for likes resource.
  * Defines the following HTTP endpoints:
  * <ul>
- *     <li>GET /api/users/:uid/likes to retrieve all the tuits liked by a user
+ *     <li>GET /users/:uid/likes to retrieve all the tuits liked by a user
  *     </li>
- *     <li>GET /api/tuits/:tid/likes to retrieve all users that liked a tuit
+ *     <li>GET /tuits/:tid/likes to retrieve all users that liked a tuit
  *     </li>
- *     <li>POST /api/users/:uid/likes/:tid to record that a user likes a tuit
+ *     <li>POST /users/:uid/likes/:tid to record that a user likes a tuit
  *     </li>
- *     <li>DELETE /api/users/:uid/unlikes/:tid to record that a user
+ *     <li>DELETE /users/:uid/unlikes/:tid to record that a user
  *     no londer likes a tuit</li>
  * </ul>
  * @property {LikeDao} likeDao Singleton DAO implementing likes CRUD operations
@@ -38,11 +38,11 @@ export default class LikeController implements LikeControllerI {
     public static getInstance = (app: Express): LikeController => {
         if(LikeController.likeController === null) {
             LikeController.likeController = new LikeController();
-            app.get("/api/users/:uid/likes", LikeController.likeController.findAllTuitsLikedByUser);
-            app.get("/api/tuits/:tid/likes", LikeController.likeController.findAllUsersThatLikedTuit);
-            app.post("/api/users/:uid/likes/:tid", LikeController.likeController.userLikesTuit);
-            app.put("/api/users/:uid/likes/:tid", LikeController.likeController.userTogglesTuitLikes);
-            app.delete("/api/users/:uid/unlikes/:tid", LikeController.likeController.userUnlikesTuit);
+            app.get("/users/:uid/likes", LikeController.likeController.findAllTuitsLikedByUser);
+            app.get("/tuits/:tid/likes", LikeController.likeController.findAllUsersThatLikedTuit);
+            app.post("/users/:uid/likes/:tid", LikeController.likeController.userLikesTuit);
+            app.put("/users/:uid/likes/:tid", LikeController.likeController.userTogglesTuitLikes);
+            app.delete("/users/:uid/unlikes/:tid", LikeController.likeController.userUnlikesTuit);
         }
         return LikeController.likeController;
     }
