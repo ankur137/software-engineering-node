@@ -1,6 +1,6 @@
-import { Express, Request, Response } from "express";
+import {Request, Response, Express} from "express";
 import UserDao from "../daos/UserDao";
-import bcrypt from "bcrypt";
+const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const AuthenticationController = (app: Express) => {
@@ -14,13 +14,13 @@ const AuthenticationController = (app: Express) => {
     newUser.password = hash;
 
     const existingUser = await userDao
-      .findUserByUsername(req.body.username);
+        .findUserByUsername(req.body.username);
     if (existingUser) {
       res.sendStatus(403);
       return;
     } else {
       const insertedUser = await userDao
-        .createUser(newUser);
+          .createUser(newUser);
       insertedUser.password = '';
       //@ts-ignore
       req.session['profile'] = insertedUser;
@@ -40,8 +40,8 @@ const AuthenticationController = (app: Express) => {
   }
 
   const logout = (req: Request, res: Response) => {
-    //@ts-check
-    req.session.destroy((err)=> console.log("Error while destroying request session: ", err));
+    //@ts-ignore
+    req.session.destroy();
     res.sendStatus(200);
   }
 
@@ -50,16 +50,16 @@ const AuthenticationController = (app: Express) => {
     const username = user.username;
     const password = user.password;
     const existingUser = await userDao
-      .findUserByUsername(username);
-  
+        .findUserByUsername(username);
+
     if (!existingUser) {
       res.sendStatus(403);
       return;
     }
-  
+
     const match = await bcrypt
-      .compare(password, existingUser.password);
-  
+        .compare(password, existingUser.password);
+
     if (match) {
       existingUser.password = '*****';
       //@ts-ignore
