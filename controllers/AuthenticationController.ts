@@ -70,10 +70,10 @@ const AuthenticationController = (app: Express) => {
     }
   };
 
-  app.post("/api/auth/login", login);
-  app.post("/api/auth/profile", profile);
-  app.post("/api/auth/logout", logout);
-  app.post("/api/auth/signup", signup);
+  app.post("/auth/login", login);
+  app.post("/auth/profile", profile);
+  app.post("/auth/logout", logout);
+  app.post("/auth/signup", signup);
 }
 
 export default AuthenticationController;

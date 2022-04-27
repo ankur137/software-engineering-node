@@ -14,7 +14,7 @@ import TuitControllerI from "../interfaces/TuitController";
  *     <li>GET /tuits/:tid to retrieve a particular tuit instances</li>
  *     <li>GET /users/:uid/tuits to retrieve tuits for a given user </li>
  *     <li>PUT /tuits/:tid to modify an individual tuit instance </li>
- *     <li>DELETE /api/tuits/:tid to remove a particular tuit instance</li>
+ *     <li>DELETE /tuits/:tid to remove a particular tuit instance</li>
  * </ul>
  * @property {TuitDao} tuitDao Singleton DAO implementing tuit CRUD operations
  * @property {TuitController} tuitController Singleton controller implementing
