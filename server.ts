@@ -33,7 +33,7 @@ if (process.env.ENV === 'PRODUCTION') {
 app.use(session(sess));
 app.use(cors({
     credentials: true,
-    // origin: process.env.CORS_ORIGIN
+    origin: ['http://localhost:3000']
 }));
 app.use(express.json())
 
@@ -50,7 +50,7 @@ app.get('/add/:a/:b', (req: Request, res: Response) =>
     res.send(req.params.a + req.params.b));
 
 new UserController(app,new UserDao());
-new TuitController(app,new TuitDao());
+new TuitController(app,TuitDao.getInstance());
 LikeController.getInstance(app);
 FollowsController.getInstance(app);
 BookmarksController.getInstance(app);
