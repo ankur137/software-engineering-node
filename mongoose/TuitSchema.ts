@@ -1,24 +1,22 @@
 /**
- * @file Implements mongoose schema for likes
+ * @file Implements mongoose schema to CRUD
+ * documents in the tuits collection
  */
 import mongoose, {Schema} from "mongoose";
 import Tuit from "../models/Tuit";
 
 /**
- * @typedef Tuit Represents tuits
- * @property {string} tuit string of the tuit
- * @property {Date} postedOn Date of tuit
- * @property {ObjectId} postedBy string of User ID
+ * Schema definition for tuits
  */
 const TuitSchema = new mongoose.Schema<Tuit>({
-    tuit: String,
-    postedOn: {type: Date, default: Date.now},
+    tuit: {type: String, required: true},
     postedBy: {type: Schema.Types.ObjectId, ref: "UserModel"},
+    postedOn: {type: Date, default: Date.now},
     stats: {
-        replies: { type: Number, default: 0 },
-        retuits: { type: Number, default: 0 },
-        likes: { type: Number, default: 0 }
+      replies: {type: Number, default: 0},
+      retuits: {type: Number, default: 0},
+      likes: {type: Number, default: 0},
+      dislikes: {type: Number, default: 0}
     }
-    },{collection:'tuits'}
-);
+}, {collection: "tuits"});
 export default TuitSchema;

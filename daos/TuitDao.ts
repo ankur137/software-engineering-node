@@ -2,104 +2,91 @@
  * @file Implements DAO managing data storage of tuits. Uses mongoose TuitModel
  * to integrate with MongoDB
  */
-import Tuit from "../models/Tuit";
-import TuitModel from "../mongoose/TuitModel";
-import TuitDaoI from "../interfaces/TuitDao";
+ import TuitModel from "../mongoose/TuitModel";
+ import Tuit from "../models/Tuit";
+ import TuitDaoI from "../interfaces/TuitDaoI";
+ 
+ /**
+  * @class TuitDao Implements Data Access Object managing data storage
+  * of Tuits
+  * @property {TuitDao} tuitDao Private single instance of TuitDao
+  */
+ export default class TuitDao implements TuitDaoI{
+     private static tuitDao: TuitDao | null = null;
+     public static getInstance = (): TuitDao => {
+         if(TuitDao.tuitDao === null) {
+             TuitDao.tuitDao = new TuitDao();
+         }
+         return TuitDao.tuitDao;
+     }
+     private constructor() {}
 
-/**
- * @class TuitDao Implements Data Access Object managing data storage
- * of Tuits
- * @property {TuitDao} tuitDao Private single instance of TuitDao
- */
-export default class TuitDao implements TuitDaoI {
+     /**
+      * Uses TuitModel to retrieve all tuit documents from tuits collection
+      * @returns Promise To be notified when the tuits are retrieved from
+      * database
+      */
+     findAllTuits = async (): Promise<Tuit[]> =>
+         TuitModel.find();
 
-    private static dao: TuitDao | null = null;
-    /**
-     * Returns the instance of TuitDao. If instance is not present the
-     * first creates the instance and the returns the same instance.
-     * @returns {TuitDao} singleton of Likes DAO
-     */
-    public static getInstance = (): TuitDao => {
-        if (TuitDao.dao === null) {
-            TuitDao.dao = new TuitDao();
-        }
-        return TuitDao.dao;
-    }
-    private constructor() { }
+     /**
+      * Uses TuitModel to retrieve all tuit document posted by a user from tuits collection
+      * @param {string} uid User's primary key
+      * @returns Promise To be notified when the tuits are retrieved from
+      * database
+      */ 
+     findAllTuitsByUser = async (uid: string): Promise<Tuit[]> =>
+         TuitModel.find({postedBy: uid})
+            .sort({'postedOn': -1})
+            .populate("postedBy")
+            .exec();
 
-    /**
-     * Inserts tuit instance into the database
-     * @param {Tuit} tuit Instance to be inserted into the database
-     * @returns Promise To be notified when tuit is inserted into the database
-     */
-    async createTuit(tuit: Tuit): Promise<Tuit> {
-        return TuitModel.create(tuit);
-    }
+     /**
+      * Uses TuitModel to retrieve a aingle tuit document from tuits collection
+      * @param {string} tid Tuit's primary key
+      * @returns Promise To be notified when the tuit is retrieved from
+      * database
+      */ 
+     findTuitById = async (tid: string): Promise<any> =>
+         TuitModel.findById(tid)
+             .populate("postedBy")
+             .exec();
 
-    /**
-     * Removes tuit from the database.
-     * @param {string} tid Primary key of tuit to be removed
-     * @returns Promise To be notified when tuit is removed from the database
-     */
-    async deleteTuit(tid: string): Promise<any> {
-        return TuitModel.deleteOne({id:tid});
-    }
+     /**
+      * Inserts tuit instance into the database
+      * @param {string} uid User posting the tuit
+      * @param {Tuit} tuit Instance to be inserted into the database
+      * @returns Promise To be notified when tuit is inserted into the database
+      */
+     createTuitByUser = async (uid: string, tuit: Tuit): Promise<Tuit> =>
+         TuitModel.create({...tuit, postedBy: uid});
 
-    /**
-     * Uses TuitModel to retrieve all tuit documents from tuits collection
-     * @returns Promise To be notified when the tuits are retrieved from
-     * database
-     */
-    async findAllTuits(): Promise<Tuit[]> {
-        return TuitModel.find();
-    }
+     /**
+      * Updates tuit with new values in database
+      * @param {string} uid Primary key of user posting the tuit
+      * @param {User} tuit Tuit object containing properties and their new values
+      * @returns Promise To be notified when tuit is updated in the database
+      */
+     updateTuit = async (uid: string, tuit: Tuit): Promise<any> =>
+         TuitModel.updateOne(
+             {_id: uid},
+             {$set: tuit});
 
-    /**
-     * Uses TuitModel to retrieve single tuit document from tuits collection
-     * @param {string} tid Tuit's primary key
-     * @returns Promise To be notified when tuit is retrieved from the database
-     */
-    async findTuitById(tid: string): Promise<Tuit | null> {
-        return TuitModel.findById(tid);
-    }
-
-    /**
-     * Uses TuitModel to retrieve tuit documents from tuits collection
-     * @param {string} uid User's primary key
-     * @returns Promise To be notified when tuits are retrieved from the database
-     */
-    async findTuitsByUser(uid: string): Promise<Tuit[]> {
-        return TuitModel.find({postedBy: uid});
-    }
-
-    /**
-     * Updates tuit with new values in database
-     * @param {string} tis Primary key of tuit to be modified
-     * @param {Tuit} tuit Tuit object containing properties and their new values
-     * @returns Promise To be notified when tuit is updated in the database
-     */
-    async updateTuit(tid: string, tuit: Tuit): Promise<any> {
-        return TuitModel.updateOne(
-            {_id: tid},
-            {$set: tuit});
-    }
-
-    async createTuitByUser(uid: string, tuit: Tuit): Promise<Tuit> {
-        return await TuitModel.create(tuit);
-    }
-
-    async deleteTuitByUser(uid: string): Promise<any> {
-        return await TuitModel.deleteMany({postedBy:uid});
-    }
-
-    /**
-    * Updates likes count with new values in database
-    * @param {string} tid Primary key of tuit stas to be modified
-    * @param {any} newStats new stats object for the tuit to be updated
-    * @returns Promise To be notified when tuit stats is updated in the database
-    */
-    updateLikes = async (tid: string, newStats: any): Promise<any> =>
+    updateLikes = async (tid: string, newStats:any) =>
         TuitModel.updateOne(
-            { _id: tid },
-            { $set: { stats: newStats } });
-}
+             {_id: tid},
+             {$set: {stats: newStats}});
+
+    updateDislikes = async (tid: string, newStats:any) =>
+        TuitModel.updateOne(
+            {_id: tid},
+            {$set: {stats: newStats}});
+         
+     /**
+      * Removes tuit from the database.
+      * @param {string} tid Primary key of tuit to be removed
+      * @returns Promise To be notified when tuit is removed from the database
+      */
+     deleteTuit = async (tid: string): Promise<any> =>
+         TuitModel.deleteOne({_id: tid});
+ }

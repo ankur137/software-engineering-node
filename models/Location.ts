@@ -1,8 +1,9 @@
 /**
- * @file Declares Location data type representing relationship between
- * users and location, as in user's location
+ * @file Declares enum of Location data type
+ * representing the location of the user
  */
-export default class Location {
-    public latitude: number = 0.0;
-    public longitude: number = 0.0;
+export default interface Location {
+    latitude: number,
+    longitude: number
 };
+ 

@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const AuthenticationController = (app: Express) => {
-
+  
   const userDao: UserDao = UserDao.getInstance();
 
   const signup = async (req: Request, res: Response) => {
@@ -16,8 +16,8 @@ const AuthenticationController = (app: Express) => {
     const existingUser = await userDao
         .findUserByUsername(req.body.username);
     if (existingUser) {
-      res.sendStatus(403);
-      return;
+       res.sendStatus(403);
+       return;
     } else {
       const insertedUser = await userDao
           .createUser(newUser);
@@ -27,7 +27,7 @@ const AuthenticationController = (app: Express) => {
       res.json(insertedUser);
     }
   }
-
+  
   const profile = (req: Request, res: Response) => {
     //@ts-ignore
     const profile = req.session['profile'];
@@ -38,28 +38,28 @@ const AuthenticationController = (app: Express) => {
       res.sendStatus(403);
     }
   }
-
+  
   const logout = (req: Request, res: Response) => {
     //@ts-ignore
-    req.session.destroy();
-    res.sendStatus(200);
+     req.session.destroy();
+     res.sendStatus(200);
   }
-
+  
   const login = async (req: Request, res: Response) => {
     const user = req.body;
     const username = user.username;
     const password = user.password;
     const existingUser = await userDao
-        .findUserByUsername(username);
-
+      .findUserByUsername(username);
+  
     if (!existingUser) {
       res.sendStatus(403);
       return;
     }
-
+  
     const match = await bcrypt
-        .compare(password, existingUser.password);
-
+      .compare(password, existingUser.password);
+  
     if (match) {
       existingUser.password = '*****';
       //@ts-ignore
@@ -70,10 +70,10 @@ const AuthenticationController = (app: Express) => {
     }
   };
 
-  app.post("/auth/login", login);
-  app.post("/auth/profile", profile);
-  app.post("/auth/logout", logout);
-  app.post("/auth/signup", signup);
+  app.post("/api/auth/login", login);  
+  app.post("/api/auth/profile", profile);
+  app.post("/api/auth/logout", logout);
+  app.post("/api/auth/signup", signup);
 }
 
 export default AuthenticationController;
